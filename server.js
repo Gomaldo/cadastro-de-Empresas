@@ -4,16 +4,13 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
-// Dados de empresas cadastradas
+
 let empresas = [];
 
-// Middleware para processar o corpo da requisição
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Configuração para servir arquivos estáticos (se precisar de CSS ou imagens)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Página de cadastro (GET)
 app.get('/', (req, res) => {
   res.send(`
       <html lang="pt-br">
@@ -128,11 +125,9 @@ app.get('/', (req, res) => {
 });
 
 
-// Rota para processar o cadastro (POST)
 app.post('/cadastro', (req, res) => {
     const { cnpj, razao_social, nome_fantasia, endereco, cidade, uf, cep, email, telefone } = req.body;
 
-    // Validação dos campos
     let erros = [];
 
     if (!cnpj) erros.push("CNPJ é obrigatório.");
@@ -145,7 +140,6 @@ app.post('/cadastro', (req, res) => {
     if (!email) erros.push("Email é obrigatório.");
     if (!telefone) erros.push("Telefone é obrigatório.");
 
-    // Se houver erros, retorna para o formulário com as mensagens de erro
     if (erros.length > 0) {
         return res.status(400).send(`
             <h1>Erro no Cadastro</h1>
@@ -154,7 +148,7 @@ app.post('/cadastro', (req, res) => {
         `);
     }
 
-    // Se não houver erros, cadastra a empresa
+    
     empresas.push({
         cnpj,
         razao_social,
@@ -167,11 +161,10 @@ app.post('/cadastro', (req, res) => {
         telefone
     });
 
-    // Redireciona de volta para a página principal
+    
     res.redirect('/');
 });
 
-// Inicia o servidor
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`);
 });
